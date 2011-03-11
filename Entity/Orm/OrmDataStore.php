@@ -61,6 +61,11 @@ class OrmDataStore extends DataStore
         return $this->recordsTransformed;
     }
 
+    public function getRecordsRaw()
+    {
+        return $this->records;
+    }
+
     /**
      * Builds an associative array from $records and assigns it to $recordsTransformed.
      */
@@ -123,8 +128,9 @@ class OrmDataStore extends DataStore
     public function set($key,$dataStoreRecord)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        if ($this->records->containsKey($key)) {      
-            $em->remove($this->records->get($key));
+        $record = $this->records->get($key);
+        if ($record !== null) {
+            $em->remove($record);
             $this->records->remove($key);
         }
         $dataStoreRecord->setKey($key);
