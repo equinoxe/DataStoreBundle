@@ -28,7 +28,7 @@ class OrmDataStore extends DataStore
      * Collection of the records assigned to this data store.
      *
      * @var ArrayCollection
-     * @orm:ManyToMany(targetEntity="Equinoxe\DataStoreBundle\Entity\Orm\DataStoreRecord")
+     * @orm:ManyToMany(targetEntity="Equinoxe\DataStoreBundle\Entity\Orm\DataStoreRecord",cascade={"All"})
      * @orm:JoinTable(name="ormdatastore_record",
      *      joinColumns={@orm:JoinColumn(name="datastore_id", referencedColumnName="uid")},
      *      inverseJoinColumns={@orm:JoinColumn(name="record_id", referencedColumnName="uid", unique="true")}
@@ -128,10 +128,15 @@ class OrmDataStore extends DataStore
     public function set($key,$dataStoreRecord)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $record = $this->records->get($key);
-        if ($record !== null) {
-            $em->remove($record);
-            $this->records->remove($key);
+        //TODO: this may suck in performanceon stores with a lot of keys..
+        $records=$this->getRecordsRaw();
+        foreach ( $this->getRecordsRaw() as $rkey => $record ) {
+           if ( $record->getKey() == $key ) {
+               $this->records->removeElement($record);
+               $em->flush();
+               $em->remove($record);
+               $em->flush();
+           }
         }
         $dataStoreRecord->setKey($key);
         $this->add($dataStoreRecord);
@@ -163,5 +168,16 @@ class OrmDataStore extends DataStore
            $this->add($newrecord);
        }
        $em->flush();
+    }
+
+    /**
+     * Sets the container for the datastore.
+     *
+     * @param string $container the container.
+     *
+     *
+     */
+    public function setContainer($container){
+        $this->container=$container;
     }
 }
