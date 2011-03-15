@@ -140,7 +140,7 @@ class OrmDataStore extends DataStore
      * @param DataStoreRecord $dataStoreRecord The record.
      * 
      */
-    public function set($key,$dataStoreRecord)
+    public function set($key, $dataStoreRecord)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $record = $this->get($key);
@@ -155,6 +155,11 @@ class OrmDataStore extends DataStore
     public function exists($key)
     {
         return isset($this->recordsTransformed[$key]);
+    }
+
+    public function count()
+    {
+        return count($this->recordsTransformed);
     }
 
      /**
