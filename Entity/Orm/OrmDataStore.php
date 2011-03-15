@@ -21,6 +21,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * types like string with this data store. @See StringRecord
  * 
  * @orm:Entity
+ * @orm:HasLifecycleCallbacks
  */
 class OrmDataStore extends DataStore
 {
@@ -82,8 +83,18 @@ class OrmDataStore extends DataStore
      *
      * @param ArrayCollection $records The new record.
      */
-    public function setRecords($records) {
+    public function setRecords($records)
+    {
         $this->records = $records;
+        $this->transform();
+    }
+
+    /**
+     * @orm:PostLoad
+     */
+    public function postLoad()
+    {
+        $this->transform();
     }
 
     /**
@@ -114,7 +125,11 @@ class OrmDataStore extends DataStore
         if ($this->recordsTransformed == null) {
             $this->transform();
         }
-        return $this->recordsTransformed[$key];
+        if (isset($this->recordsTransformed[$key])) {
+            return $this->recordsTransformed[$key];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -128,13 +143,18 @@ class OrmDataStore extends DataStore
     public function set($key,$dataStoreRecord)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $record = $this->records->get($key);
+        $record = $this->get($key);
         if ($record !== null) {
             $em->remove($record);
-            $this->records->remove($key);
+            $this->records->removeElement($record);
         }
         $dataStoreRecord->setKey($key);
         $this->add($dataStoreRecord);
+    }
+
+    public function exists($key)
+    {
+        return isset($this->recordsTransformed[$key]);
     }
 
      /**

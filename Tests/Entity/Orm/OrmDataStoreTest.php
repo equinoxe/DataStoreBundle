@@ -2,7 +2,7 @@
 
 namespace Equinoxe\DataStoreBundle\Entity\Orm;
 
-use Equinoxe\DataStoreBundle\Orm\StringRecord;
+use Equinoxe\DataStoreBundle\Entity\Orm\StringRecord;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\UnitOfWork;
 
@@ -92,7 +92,6 @@ class OrmDataStoreTest extends \Equinoxe\TestBundle\Test\WebTestCase {
         // Add a first record which gets replaced later.
         $teststring1 = new StringRecord('Teststring1');
         $em->persist($teststring1);
-
         $this->object->set('wango', $teststring1);
         $em->flush();
 
@@ -113,6 +112,15 @@ class OrmDataStoreTest extends \Equinoxe\TestBundle\Test\WebTestCase {
 
         // Is the second one persisted?
         $this->assertEquals(UnitOfWork::STATE_MANAGED, $uow->getEntityState($teststring2));
+
+        // Create new Container to clear temporary entity cache
+        $con = $this->createContainer();
+        $newEm = $con->get('doctrine.orm.entity_manager');
+        $obj = $newEm->find('Equinoxe\DataStoreBundle\Entity\Orm\OrmDataStore', $this->object->getUid());
+
+        $this->assertTrue($obj->exists('wango'));
+        $this->assertEquals('Teststring2', $obj->get('wango')->getValue());
+        $this->assertEquals(1, $obj->getRecordsRaw()->count());
     }
     /**
      * Test the snapshot methods.
