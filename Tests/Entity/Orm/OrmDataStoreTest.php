@@ -98,6 +98,7 @@ class OrmDataStoreTest extends \Equinoxe\TestBundle\Test\WebTestCase {
         // Is this record now managed?
         $this->assertEquals(UnitOfWork::STATE_MANAGED,$uow->getEntityState($teststring1));
 
+
         // New record to replace the first one.
         $teststring2 = new StringRecord('Teststring2');
         $em->persist($teststring2);
@@ -114,9 +115,8 @@ class OrmDataStoreTest extends \Equinoxe\TestBundle\Test\WebTestCase {
         $this->assertEquals(UnitOfWork::STATE_MANAGED, $uow->getEntityState($teststring2));
 
         // Create new Container to clear temporary entity cache
-        $con = $this->createContainer();
-        $newEm = $con->get('doctrine.orm.entity_manager');
-        $obj = $newEm->find('Equinoxe\DataStoreBundle\Entity\Orm\OrmDataStore', $this->object->getUid());
+        $em->clear();
+        $obj = $em->find('Equinoxe\DataStoreBundle\Entity\Orm\OrmDataStore', $this->object->getUid());
 
         $this->assertTrue($obj->exists('wango'));
         $this->assertEquals('Teststring2', $obj->get('wango')->getValue());
@@ -125,8 +125,9 @@ class OrmDataStoreTest extends \Equinoxe\TestBundle\Test\WebTestCase {
     /**
      * Test the snapshot methods.
      */
-    public function testSetGetSnapshot() {
+        public function testSetGetSnapshot() {
         $em = $this->container->get('doctrine.orm.entity_manager');
+        $this->object->setContainer($this->container);
         // Get needed stuff.
         $uow = $em->getUnitOfWork();
 
@@ -151,11 +152,12 @@ class OrmDataStoreTest extends \Equinoxe\TestBundle\Test\WebTestCase {
         $myrecord2->setValue($testvalue2);
         $this->object->set('testkey',$myrecord2);
         $em->flush();
-
         $this->assertEquals($testvalue2, $this->object->get('testkey')->getValue());
         $this->object->restoreSnapShot($snapshot);
         $em->flush();
         $this->assertEquals($testvalue1, $this->object->get('testkey')->getValue());
 
     }
+
+
 }
