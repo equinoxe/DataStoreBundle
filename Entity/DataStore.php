@@ -13,13 +13,15 @@ namespace Equinoxe\DataStoreBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * 
  * 
- * @orm:Entity
- * @orm:InheritanceType("JOINED")
- * @orm:DiscriminatorColumn(name="discr", type="string")
- * @orm:DiscriminatorMap({
+ * @ORM\Entity
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({
  *      "orm" = "Equinoxe\DataStoreBundle\Entity\Orm\OrmDataStore"
  * })
  */
@@ -29,9 +31,9 @@ class DataStore
      * Unique Id of the data store.
      * 
      * @var integer
-     * @orm:Id
-     * @orm:Column(type="integer")
-     * @orm:GeneratedValue(strategy="IDENTITY")
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $uid;
 
@@ -40,7 +42,7 @@ class DataStore
      * Name of the data store. Unique within a workflow.
      *
      * @var string
-     * @orm:Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $name;
 

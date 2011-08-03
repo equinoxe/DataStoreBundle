@@ -13,9 +13,10 @@ namespace Equinoxe\DataStoreBundle\Entity\Orm;
 
 use Equinoxe\DataStoreBundle\Entity\Orm\DataStoreRecord;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @orm:Entity
+ * @ORM\Entity
  */
 class StringRecord extends DataStoreRecord
 {
@@ -26,7 +27,7 @@ class StringRecord extends DataStoreRecord
     /**
      *
      * @var string
-     * @orm:Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $value;
 

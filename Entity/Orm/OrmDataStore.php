@@ -13,15 +13,16 @@ namespace Equinoxe\DataStoreBundle\Entity\Orm;
 
 use Equinoxe\DataStoreBundle\Entity\DataStore;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM; 
 
 /**
  * This class provides an object relational mapper data store for Doctrine entities.
  *
  * There are several Doctrine entities shipped with DataStoreBundle to use normal data
- * types like string with this data store. @See StringRecord
+ * types like string with this data store.
  * 
- * @orm:Entity
- * @orm:HasLifecycleCallbacks
+ * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class OrmDataStore extends DataStore
 {
@@ -29,10 +30,10 @@ class OrmDataStore extends DataStore
      * Collection of the records assigned to this data store.
      *
      * @var ArrayCollection
-     * @orm:ManyToMany(targetEntity="Equinoxe\DataStoreBundle\Entity\Orm\DataStoreRecord",cascade={"All"})
-     * @orm:JoinTable(name="ormdatastore_record",
-     *      joinColumns={@orm:JoinColumn(name="datastore_id", referencedColumnName="uid")},
-     *      inverseJoinColumns={@orm:JoinColumn(name="record_id", referencedColumnName="uid", unique="true")}
+     * @ORM\ManyToMany(targetEntity="Equinoxe\DataStoreBundle\Entity\Orm\DataStoreRecord",cascade={"All"})
+     * @ORM\JoinTable(name="ormdatastore_record",
+     *      joinColumns={@ORM\JoinColumn(name="datastore_id", referencedColumnName="uid")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="record_id", referencedColumnName="uid", unique="true")}
      *      )
      */
     protected $records;
@@ -90,7 +91,7 @@ class OrmDataStore extends DataStore
     }
 
     /**
-     * @orm:PostLoad
+     * @ORM\PostLoad
      */
     public function postLoad()
     {

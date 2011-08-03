@@ -13,14 +13,14 @@ namespace Equinoxe\DataStoreBundle\Entity\Orm;
 
 use Equinoxe\DataStoreBundle\Entity\DataStore;
 use Doctrine\Common\Collections\ArrayCollection;
-
+use Doctrine\ORM\Mapping as ORM;
 /**
  * Base class for Records.
  *
- * @orm:Entity
- * @orm:InheritanceType("JOINED")
- * @orm:DiscriminatorColumn(name="discr", type="string")
- * @orm:DiscriminatorMap({
+ * @ORM\Entity
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({
  *      "string" = "Equinoxe\DataStoreBundle\Entity\Orm\StringRecord"
  * })
  */
@@ -30,16 +30,16 @@ abstract class DataStoreRecord
      * Unique Id of the data store.
      *
      * @var integer
-     * @orm:Id
-     * @orm:Column(type="integer")
-     * @orm:GeneratedValue(strategy="IDENTITY")
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $uid;
 
     /**
      *
      * @var string
-     * @orm:Column(type="string",name="record_key")
+     * @ORM\Column(type="string",name="record_key")
      */
     protected $key;
 
