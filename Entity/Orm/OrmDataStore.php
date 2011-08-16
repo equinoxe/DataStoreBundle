@@ -32,8 +32,8 @@ class OrmDataStore extends DataStore
      * @var ArrayCollection
      * @ORM\ManyToMany(targetEntity="Equinoxe\DataStoreBundle\Entity\Orm\DataStoreRecord",cascade={"All"})
      * @ORM\JoinTable(name="ormdatastore_record",
-     *      joinColumns={@ORM\JoinColumn(name="datastore_id", referencedColumnName="uid")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="record_id", referencedColumnName="uid", unique="true")}
+     *      joinColumns={@ORM\JoinColumn(name="datastore_id", referencedColumnName="uid", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="record_id", referencedColumnName="uid", unique="true", onDelete="CASCADE")}
      *      )
      */
     protected $records;
